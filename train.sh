@@ -1,34 +1,35 @@
 # seq len 2048
+export USER='world'
 export TPU_NAME='v4-64'
 export ZONE='us-central2-b'
 
 echo "[local] Killing TPU"
-gcloud compute tpus tpu-vm ssh beomi@$TPU_NAME \
+gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME \
 --zone $ZONE --worker=all --command "sudo fuser -k /dev/accel0"
 
 echo "[local] Removing TPU Lock"
-gcloud compute tpus tpu-vm ssh beomi@$TPU_NAME \
+gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME \
 --zone $ZONE --worker=all --command "sudo rm -f /tmp/libtpu_lockfile"
 
 echo "[local] Removing screens"
-gcloud compute tpus tpu-vm ssh beomi@$TPU_NAME \
+gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME \
 --zone $ZONE --worker=all --command "killall screen"
 
 echo "[local] Git pull"
-gcloud compute tpus tpu-vm ssh beomi@$TPU_NAME --zone $ZONE --worker=all --command \
+gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME --zone $ZONE --worker=all --command \
 "source EasyLMenv/bin/activate && \
 cd Gemma-EasyLM && git fetch origin && \
-git reset --hard origin/main && rm /home/beomi/Gemma-EasyLM/train.sh"
+git reset --hard origin/main && rm /home/${USER}/Gemma-EasyLM/train.sh"
 
 echo "[local] Set runner.sh"
 
 # Log per 128 * 50 steps, matching the gradient accumulation steps = Real 1 step
-gcloud compute tpus tpu-vm ssh beomi@$TPU_NAME --zone $ZONE --worker=all --command "
-cat > /home/beomi/Gemma-EasyLM/runner.sh << 'EOF'
+gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME --zone $ZONE --worker=all --command "
+cat > /home/${USER}/Gemma-EasyLM/runner.sh << 'EOF'
 export LIBTPU_INIT_ARGS='--xla_jf_spmd_threshold_for_windowed_einsum_mib=0 --xla_tpu_spmd_threshold_for_allgather_cse=10000 --xla_enable_async_all_gather=true --xla_tpu_enable_latency_hiding_scheduler=true TPU_MEGACORE=MEGACORE_DENSE'
 
 python -m EasyLM.models.gemma.gemma_train \
---load_checkpoint=flax_params::/home/beomi/flax_model.msgpack \
+--load_checkpoint=flax_params::/home/${USER}/flax_model.msgpack \
 --mesh_dim=1,-1,4 \
 --dtype=bf16 \
 --total_steps=320000 \
@@ -52,10 +53,10 @@ python -m EasyLM.models.gemma.gemma_train \
 --logger.online=True \
 --logger.output_dir=gs://kodataset/gemma-checkpoint
 EOF
-chmod +x /home/beomi/Gemma-EasyLM/runner.sh"
+chmod +x /home/${USER}/Gemma-EasyLM/runner.sh"
 
 echo "[local] RUN!!!"
 
-gcloud compute tpus tpu-vm ssh beomi@$TPU_NAME --zone us-central2-b --worker=all --command \
+gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME --zone us-central2-b --worker=all --command \
 "screen -L -d -m bash -i -c 'export TCMALLOC_LARGE_ALLOC_REPORT_THRESHOLD=107374182400; \
-source EasyLMenv/bin/activate && cd Gemma-EasyLM; /home/beomi/Gemma-EasyLM/runner.sh'"
+source EasyLMenv/bin/activate && cd Gemma-EasyLM; /home/${USER}/Gemma-EasyLM/runner.sh'"
