@@ -2,6 +2,8 @@
 export USER='world'
 export TPU_NAME='v4-64'
 export ZONE='us-central2-b'
+export BUCKET='gemago-alpha'
+export DATASET=''
 
 echo "[local] Killing TPU"
 gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME \
@@ -40,7 +42,7 @@ python -m EasyLM.models.gemma.gemma_train \
 --train_dataset.text_processor.fields='text' \
 --train_dataset.json_dataset.seq_length=8192 \
 --train_dataset.json_dataset.batch_size=8 \
---train_dataset.json_dataset.path=gs://kodataset/kor_falcon_hq/falcon_korean_stage_012_concat.jsonl \
+--train_dataset.json_dataset.path=gs://${BUCKET}/${DATASET} \
 --optimizer.accumulate_gradient_steps=64 \
 --optimizer.type=adamw \
 --optimizer.adamw_optimizer.weight_decay=0.1 \
@@ -51,7 +53,7 @@ python -m EasyLM.models.gemma.gemma_train \
 --checkpointer.save_optimizer_state=True \
 --checkpointer.float_dtype=bf16 \
 --logger.online=True \
---logger.output_dir=gs://kodataset/gemma-checkpoint
+--logger.output_dir=gs://${BUCKET}/gemma-checkpoint
 EOF
 chmod +x /home/${USER}/Gemma-EasyLM/runner.sh"
 
