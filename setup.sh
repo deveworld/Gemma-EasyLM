@@ -12,4 +12,4 @@ gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME \
 
 echo "[local] Setting up tpu vms"
 gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME \
---zone $ZONE --worker=all --command "./home/${USER}/Gemma-EasyLM/scripts/tpu_vm_setup.sh"
+--zone $ZONE --worker=all --command "/home/${USER}/Gemma-EasyLM/scripts/tpu_vm_setup.sh"
