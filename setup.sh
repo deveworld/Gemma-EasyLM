@@ -9,7 +9,7 @@ export WANDB_TOKEN=''
 
 echo "[local] Cloning repository"
 gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME \
---zone $ZONE --worker=all --command "rm -r Gemma-EasyLM && git clone ${GIT_REPO}"
+--zone $ZONE --worker=all --command "sudo rm -r Gemma-EasyLM && git clone ${GIT_REPO}"
 
 echo "[local] Setting up tpu vms"
 gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME \
