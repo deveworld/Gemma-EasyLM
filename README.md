@@ -13,9 +13,9 @@ Firstly, concatenate all Flax model weights available at: [Hugging Face - Gemma 
 Use the following example code to accomplish this:
 
 ```python
-from transformers import GemmaForCausalLM
+from transformers import FlaxAutoModelForCausalLM
 
-model = GemmaForCausalLM.from_pretrained("google/gemma-7b", torch_dtype="auto")
+model = FlaxAutoModelForCausalLM.from_pretrained("google/gemma-7b", revision="flax")
 model.save_pretrained("./flax-concatted", max_shard_size="99GB")
 ```
 
