@@ -1,8 +1,8 @@
 # seq len 2048
-export USER='world'
+export USER=$(whoami)
 export TPU_NAME='v4-64'
 export ZONE='us-central2-b'
-export BUCKET='gemago-alpha'
+export BUCKET=''
 export DATASET=''
 
 echo "[local] Killing TPU"
