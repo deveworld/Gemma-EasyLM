@@ -9,7 +9,7 @@ export WANDB_TOKEN=''
 
 echo "[local] Cloning repository"
 gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME \
---zone $ZONE --worker=all --command "git clone ${GIT_REPO}"
+--zone $ZONE --worker=all --command "rm -r Gemma-EasyLM && git clone ${GIT_REPO}"
 
 echo "[local] Setting up tpu vms"
 gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME \
@@ -17,4 +17,4 @@ gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME \
 
 echo "[local] Wandb setting"
 gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME \
---zone $ZONE --worker=all --command "pip install wandb && wandb login ${WANDB_TOKEN}"
+--zone $ZONE --worker=all --command "pip install wandb && /home/${USER}/.local/bin/wandb login ${WANDB_TOKEN}"
