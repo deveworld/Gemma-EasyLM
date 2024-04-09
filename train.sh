@@ -19,8 +19,7 @@ gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME \
 
 echo "[local] Git pull"
 gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME --zone $ZONE --worker=all --command \
-"source EasyLMenv/bin/activate && \
-cd Gemma-EasyLM && git fetch origin && \
+"cd Gemma-EasyLM && git fetch origin && \
 git reset --hard origin/main && rm /home/${USER}/Gemma-EasyLM/train.sh"
 
 echo "[local] Set runner.sh"
@@ -61,4 +60,4 @@ echo "[local] RUN!!!"
 
 gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME --zone us-central2-b --worker=all --command \
 "screen -L -d -m bash -i -c 'export TCMALLOC_LARGE_ALLOC_REPORT_THRESHOLD=107374182400; \
-source EasyLMenv/bin/activate && cd Gemma-EasyLM; /home/${USER}/Gemma-EasyLM/runner.sh'"
+cd Gemma-EasyLM; /home/${USER}/Gemma-EasyLM/runner.sh'"
