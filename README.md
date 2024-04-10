@@ -50,29 +50,20 @@ Execute the training script to start the training process:
 Download the `streaming_train_state` file from your GCS repository using the following command:
 
 ```
-gsutil cp gs://YOUR_GCS_REPO_NAME/.../streaming_train_state_80000 .
+gsutil cp gs://YOUR_GCS_REPO_NAME/.../streaming_train_state_STEPMO .
 ```
 
 Note: The file name will either be `streaming_train_state` or `streaming_train_state_STEPNO`.
 
-### Step 2: Update the `.stream` File Path
-
-In the `convert_easylm_stream_to_hf_safetensors.py` file, modify the path to the `.stream` file accordingly:
-
-```python
-# Modify this line
-_, param = StreamingCheckpointer.load_trainstate_checkpoint(load_from='trainstate_params::/home/latheledusjp/streaming_train_state_80000')
-```
-
-### Step 3: Execute the Conversion Script
+### Step 2: Execute the Conversion Script
 
 Run the conversion script to convert the EasyLM model format to Hugging Face's format:
 
 ```
-python convert_easylm_stream_to_hf_safetensors.py
+python convert_easylm_stream_to_hf_safetensors.py ./streaming_train_state_STEPNO
 ```
 
-### Step 4: Verify the Output Files
+### Step 3: Verify the Output Files
 
 Check the generated output files in the `./gemma-ko-8.5b-dev` directory.
 
