@@ -65,7 +65,7 @@ python convert_easylm_stream_to_hf_safetensors.py ./streaming_train_state_STEPNO
 
 ### Step 3: Verify the Output Files
 
-Check the generated output files in the `./gemma-ko-8.5b-dev` directory.
+Check the generated output files in the `./gemma-ko-7b-dev` directory.
 
 > The Flax-version of the weight file can be found in the `./flax-gemma-ko-8b` folder.
 
