@@ -1,4 +1,4 @@
-# Gemma-EasyLM
+# Gemma-EasyLM For 2b
 
 This document outlines the integration of the Gemma model into the EasyLM framework, including instructions for training, converting the model format, and serving the model with Gradio.
 
@@ -6,16 +6,16 @@ This document outlines the integration of the Gemma model into the EasyLM framew
 
 ### Step 1: Consolidate Flax Weights from Hugging Face
 
-> You can skip this step with downloading https://huggingface.co/beomi/gemma-ko-7b/resolve/flax-init/flax_model.msgpack
+> You can skip this step with downloading https://huggingface.co/beomi/gemma-ko-2b/resolve/flax-init/flax_model.msgpack
 
-Firstly, sharded Flax Gemma model weights available at: [Hugging Face - Gemma 7B](https://huggingface.co/google/gemma-7b/tree/flax).
+Firstly, sharded Flax Gemma model weights available at: [Hugging Face - Gemma 2B](https://huggingface.co/google/gemma-2b/tree/flax).
 
 Use the following example code to accomplish this:
 
 ```python
 from transformers import FlaxAutoModelForCausalLM
 
-model = FlaxAutoModelForCausalLM.from_pretrained("google/gemma-7b", revision="flax")
+model = FlaxAutoModelForCausalLM.from_pretrained("google/gemma-2b", revision="flax")
 model.save_pretrained("./flax-concatted", max_shard_size="99GB")
 ```
 
@@ -23,10 +23,11 @@ This script generates a `flax-concatted/flax_model.msgpack` file. We will utiliz
 
 ### Step 2: Upload the .msgpack File to Google Cloud Storage (GCS)
 
-Execute the following command to upload the generated `.msgpack` file to your GCS repository:
+Execute the following command to rename and upload the generated `.msgpack` file to your GCS repository:
 
 ```bash
-gsutil cp ./flax-concatted/flax_model.msgpack gs://YOUR_GCS_REPO_NAME
+mv ./flax-concatted/flax_model.msgpack ./flax-concatted/flax_2b_model.msgpack 
+gsutil cp ./flax-concatted/flax_2b_model.msgpack gs://YOUR_GCS_REPO_NAME
 ```
 
 ### Step 3: Modify the `train.sh` Script
@@ -65,9 +66,9 @@ python convert_easylm_stream_to_hf_safetensors.py ./streaming_train_state_STEPNO
 
 ### Step 3: Verify the Output Files
 
-Check the generated output files in the `./gemma-ko-8.5b-dev` directory.
+Check the generated output files in the `./gemma-ko-2b-dev` directory.
 
-> The Flax-version of the weight file can be found in the `./flax-gemma-ko-8b` folder.
+> The Flax-version of the weight file can be found in the `./flax-gemma-ko-2b` folder.
 
 ## Serving the Model with Gradio
 
