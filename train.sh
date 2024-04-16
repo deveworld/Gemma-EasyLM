@@ -20,7 +20,7 @@ gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME \
 echo "[local] Git pull"
 gcloud compute tpus tpu-vm ssh $USER@$TPU_NAME --zone $ZONE --worker=all --command \
 "cd Gemma-EasyLM && git fetch origin && \
-git reset --hard origin/main && rm /home/${USER}/Gemma-EasyLM/train.sh"
+git reset --hard origin/2b && rm /home/${USER}/Gemma-EasyLM/train.sh"
 
 echo "[local] Set runner.sh"
 
@@ -30,7 +30,7 @@ cat > /home/${USER}/Gemma-EasyLM/runner.sh << 'EOF'
 export LIBTPU_INIT_ARGS='--xla_jf_spmd_threshold_for_windowed_einsum_mib=0 --xla_tpu_spmd_threshold_for_allgather_cse=10000 --xla_enable_async_all_gather=true --xla_tpu_enable_latency_hiding_scheduler=true TPU_MEGACORE=MEGACORE_DENSE'
 
 python -m EasyLM.models.gemma.gemma_train \
---load_checkpoint=flax_params::gs://${BUCKET}/flax_model.msgpack \
+--load_checkpoint=flax_params::gs://${BUCKET}/flax_2b_model.msgpack \
 --mesh_dim=1,-1,4 \
 --dtype=bf16 \
 --total_steps=320000 \
@@ -52,7 +52,7 @@ python -m EasyLM.models.gemma.gemma_train \
 --checkpointer.save_optimizer_state=True \
 --checkpointer.float_dtype=bf16 \
 --logger.online=True \
---logger.output_dir=gs://${BUCKET}/gemma-checkpoint
+--logger.output_dir=gs://${BUCKET}/gemma-2b-checkpoint
 EOF
 chmod +x /home/${USER}/Gemma-EasyLM/runner.sh"
 
