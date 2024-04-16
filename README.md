@@ -77,8 +77,10 @@ To serve the model using Gradio, follow these steps:
 ```
 cd EasyLM/models/gemma
 pip install -r serving_requirements.txt
-./serve_test.sh
+./serve_test.sh <path of flax_model.msgpack>
 ```
+
+where flax_model.msgpack is in ./flax-gemma-ko-2b/
 
 ## Original EasyLM Reference
 If you found EasyLM useful in your research or applications, please cite using the following BibTeX:
