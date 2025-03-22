@@ -4,6 +4,9 @@ This document outlines the integration of the Gemma model into the EasyLM framew
 
 ## Training: Integrating HF Flax Weights into EasyLM
 
+You are in 2B version now.
+(view also [7B version](https://github.com/deveworld/Gemma-EasyLM/))
+
 ### Step 1: Consolidate Flax Weights from Hugging Face
 
 > You can skip this step with downloading https://huggingface.co/beomi/gemma-ko-2b/resolve/flax-init/flax_model.msgpack
